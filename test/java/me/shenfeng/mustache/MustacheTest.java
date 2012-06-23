@@ -1,0 +1,60 @@
+package me.shenfeng.mustache;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+
+public class MustacheTest {
+
+    String template = "<p>this is a test</p> <ul> {{#arr}} <li> <p>{{{ name }}}</p> <div> {{#arr}} <p>{{ name }}</p> {{/arr}} </div> {{/arr}} </li> </ul>";
+
+    public static void printTokens(List<Token> tokens, String indent) {
+        for (Token token : tokens) {
+            System.out.printf("%s%c %s\n", indent, token.type, token.value);
+            if (token.tokens != null) {
+                printTokens(token.tokens, indent + "  ");
+            }
+        }
+    }
+
+    @Test
+    public void testParser2() throws IOException, ParserException {
+        BufferedReader br = new BufferedReader(
+                new FileReader("test/test.tpl"));
+
+        String line;
+        String file = "";
+        while ((line = br.readLine()) != null) {
+            file += (line + '\n');
+        }
+
+        Mustache m = new Mustache(file);
+        printTokens(m.tokens, "");
+
+    }
+
+    @Test
+    public void testParse() throws ParserException {
+        Mustache m = new Mustache(template);
+        printTokens(m.tokens, "");
+        List arr = new ArrayList();
+        for (int i = 0; i < 10; i++) {
+            Map cell = new HashMap();
+            cell.put("name", "outer" + i);
+            arr.add(cell);
+        }
+        Map data = new HashMap();
+        data.put("arr", arr);
+        // cell.put("arr", value)
+        for (int i = 0; i < 1000000; ++i) {
+            String html = m.render(data);
+        }
+        // System.out.println(html);
+    }
+}

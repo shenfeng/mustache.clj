@@ -1,0 +1,10 @@
+(defproject me.shenfeng/mustache "0.0.1"
+  :description "Mustache write in java, for clojure"
+  :dependencies [[clojure "1.4.0"]]
+  :warn-on-reflection true
+  :java-source-path "src/java"
+  ;; :javac-options {:source "1.7" :target "1.7" :debug "true" :fork "true"}
+  :dev-dependencies [[swank-clojure "1.4.0"]
+                     [junit/junit "4.8.2"]
+                     [de.ubercode.clostache/clostache "1.3.0"]])
+
