@@ -25,6 +25,9 @@ public class Token {
             value = value.trim();
             this.value = Keyword.intern(value);
         } else {
+            // remove space between tags, this is not in Mustache spec
+            // It works for html
+            value = value.replaceAll("(\\w)>\\s+?<(\\w|/)", "$1><$2");
             this.value = value;
         }
     }
