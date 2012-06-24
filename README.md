@@ -7,7 +7,7 @@ template system in Java for clojure.
 By preprocessing template into a tree like data structure, It's super
 fast. My dev machine can Render
 [this template](https://github.com/shenfeng/mustache.clj/blob/master/test/test.tpl)
-about 30000 times per seconds.
+about 33000 times per seconds.
 
 ## Usage
 
