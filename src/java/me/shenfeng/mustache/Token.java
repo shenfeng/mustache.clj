@@ -10,7 +10,8 @@ import clojure.lang.Keyword;
 public class Token {
     public static final char TEXT = 't';
     public static final char NAME = 'n';
-    public static final char NO_ESCAPE = '{';
+    public static final char NO_ESCAPE1 = '{';
+    public static final char NO_ESCAPE2 = '&';
     public static final char SECTION = '#';
     public static final char INVERTED = '^';
     public static final char PARTIAL = '>';
@@ -36,12 +37,46 @@ public class Token {
         return sb.toString();
     }
 
+    public static String escapeHtml(String html) {
+        StringBuilder sb = new StringBuilder(html.length() + 10);
+        for (int i = 0; i < html.length(); ++i) {
+            char c = html.charAt(i);
+            switch (c) {
+            case '&':
+                sb.append("&amp;");
+                break;
+            case '<':
+                sb.append("&lt;");
+                break;
+            case '>':
+                sb.append("&gt;");
+                break;
+            case '"':
+                sb.append("&quot;");
+                break;
+            case '\'':
+                sb.append("&#39;");
+                break;
+            default:
+                sb.append(c);
+                break;
+            }
+        }
+        return sb.toString();
+    }
+
     public String render(Context c) {
         switch (type) {
         case TEXT:
             return value.toString();
         case NAME:
-        case NO_ESCAPE:
+            Object v = c.lookup(value);
+            if (v != null) {
+                return escapeHtml(v.toString());
+            }
+            break;
+        case NO_ESCAPE1:
+        case NO_ESCAPE2:
             Object r = c.lookup(value);
             if (r != null) {
                 return r.toString();
@@ -74,6 +109,7 @@ public class Token {
             }
             break;
         case PARTIAL:
+            // TODO
         }
         return "";
     }

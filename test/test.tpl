@@ -21,7 +21,7 @@
         {{ title }}
       </span>
       <div class="url-holder">
-        <img class="favicon" src="{{favicon}}"
+        <img class="favicon" src="{{favicon}}" data-id={{id}}
         onerror="MW.utils.favicon_error(this)" width="16"
         height="16"/>
         <span class="url">{{ url }}</span>

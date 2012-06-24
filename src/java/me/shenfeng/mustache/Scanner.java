@@ -1,7 +1,7 @@
 package me.shenfeng.mustache;
 
 public class Scanner {
-    public static final String TAGS = "#^>!/{";
+    public static final String TAGS = "#^>!/{&";
 
     String template;
     int idx;

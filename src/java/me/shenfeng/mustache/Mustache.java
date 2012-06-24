@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class Mustache {
 
-    public static final Pattern TAGRE = Pattern
-            .compile("#|\\^|\\/|>|\\{|&|=|!");
     public static final String BEGIN = "{{";
     public static final String END = "}}";
 
