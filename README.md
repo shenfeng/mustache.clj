@@ -1,4 +1,4 @@
-# mustache.clj - Logic-less {{mustache}} templates with Clojure
+# mustache.clj - Logic-less {{mustache}} templates for Clojure
 
 [mustache.clj](https://github.com/shenfeng/mustache.clj)
 is an implementation of the [Mustache](http://mustache.github.com/)
@@ -11,6 +11,11 @@ about 30000 times per seconds.
 
 ## Usage
 
+```clj
+[me.shenfeng/mustache "0.0.1"]
+```
+It export 2 functions `deftemplate` and `to-html`
+
 ### Template
 
 ```html
@@ -18,9 +23,7 @@ about 30000 times per seconds.
 <h2>this is a test</h2>
 <ul>
   {{#arr}}
-    <li>
-      <p>{{ name }}</p>
-    </li>
+    <li><p>{{ name }}</p></li>
   {{/arr}}
 </ul>
 ```
@@ -34,7 +37,7 @@ about 30000 times per seconds.
 
 ```
 
-### output
+### Output
 
 ```html
 <h2>this is a test</h2><ul>
