@@ -32,7 +32,7 @@ public class Scanner {
     }
 
     public void skipeWhiteSpace() {
-        while (Character.isWhitespace(next())) {
+        while (Character.isWhitespace(next()) && !eos()) {
             ++idx;
         }
     }
