@@ -23,20 +23,31 @@ public class MustacheTest {
         }
     }
 
-    @Test
-    public void testParser2() throws IOException, ParserException {
-        BufferedReader br = new BufferedReader(
-                new FileReader("test/test.tpl"));
+    public String getContent(String name) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(name));
 
         String line;
         String file = "";
         while ((line = br.readLine()) != null) {
             file += (line + '\n');
         }
+        br.close();
+        return file;
+    }
 
+    @Test
+    public void testParser2() throws IOException, ParserException {
+        String file = getContent("test/test.tpl");
         Mustache m = new Mustache(file);
         printTokens(m.tokens, "");
 
+    }
+
+    @Test
+    public void testParser3() throws IOException, ParserException {
+        String file = getContent("test/landing.tpl");
+        Mustache m = new Mustache(file);
+        printTokens(m.tokens, "");
     }
 
     @Test
