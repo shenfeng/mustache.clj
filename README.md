@@ -1,30 +1,38 @@
 # mustache.clj - Logic-less {{mustache}} templates for Clojure
 
 [mustache.clj](https://github.com/shenfeng/mustache.clj)
-is an implementation of the [Mustache](http://mustache.github.com/)
-template system in Java for clojure.
+is a (yet another) implementation of the [Mustache](http://mustache.github.com/)
+template system for Clojure.
 
-By preprocessing template into a tree like data structure, It's super
-fast. My dev machine can Render
-[this template](https://github.com/shenfeng/mustache.clj/blob/master/test/test.tpl)
-about 33000 times per seconds.
+By preprocessing template into a tree like data structure, It's quite fast.
 
 ## Usage
 
 ```clj
-[me.shenfeng/mustache "0.0.1"]
+[me.shenfeng/mustache "0.0.4"]
 ```
-It export 2 functions `deftemplate` and `to-html`
+mustache.clj export 2 functions `deftemplate` and `to-html`:
+
+```clj
+
+(deftemplate template "{{template}}")
+
+(to-html template {:you-data "data"})
+
+```
 
 ### Template
 
 ```html
 <!-- test/sample.tpl -->
-<h2>this is a test</h2>
+<h1>{{ title }}</h1>
+<p class="desc">{{ desc }}</p>
 <ul>
-  {{#arr}}
-    <li><p>{{ name }}</p></li>
-  {{/arr}}
+  {{#tags}}
+    <li class="tag">{{ tag }}</li>{{/tags}}
+  {{# hidden }}
+    this will not show, if hidden is false or empty list
+  {{/ hidden }}
 </ul>
 ```
 ### Code
@@ -32,20 +40,24 @@ It export 2 functions `deftemplate` and `to-html`
 ```clj
 (deftemplate template (slurp "test/sample.tpl"))
 
-(println (to-html template {:arr [{:name "name1"}
-                                  {:name "name2"}]}))
+(def data {:title "mustache.clj"
+           :desc "Logic-less {{mustache}} templates for Clojure"
+           :tags [{:tag "Clojure"}
+                  {:tag "Mustache"}
+                  {:tag "Performance"}]})
 
+(println (to-html template data))
 ```
 
 ### Output
 
 ```html
-<h2>this is a test</h2><ul>
-
-    <li><p>name1</p></li>
-
-    <li><p>name2</p></li>
-
+<h1>mustache.clj</h1>
+<p class="desc">Logic-less {{mustache}} templates for Clojure</p>
+<ul>
+    <li class="tag">Clojure</li>
+    <li class="tag">Mustache</li>
+    <li class="tag">Performance</li>
 </ul>
 ```
 
