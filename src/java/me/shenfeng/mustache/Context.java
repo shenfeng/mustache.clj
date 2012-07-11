@@ -3,9 +3,13 @@ package me.shenfeng.mustache;
 import java.util.List;
 import java.util.Map;
 
+import clojure.lang.Keyword;
+
 public class Context {
     private Object data;
     private Context parent;
+
+    private static Keyword ME = Keyword.intern(".");
 
     public Context(Object data, Context parent) {
         this.data = data;
@@ -33,7 +37,7 @@ public class Context {
     }
 
     public Object lookup(Object key) {
-        if (key.equals(".")) {
+        if (key.equals(ME)) {
             return data;
         }
 
