@@ -4,6 +4,7 @@ import static me.shenfeng.mustache.Context.isArray;
 import static me.shenfeng.mustache.Context.isFalse;
 
 import java.util.List;
+import java.util.Map;
 
 import clojure.lang.Keyword;
 
@@ -32,10 +33,11 @@ public class Token {
         }
     }
 
-    public static String renderTokens(List<Token> tokens, Context c) {
+    public static String renderTokens(List<Token> tokens, Context c,
+            Map<Keyword, String> partials) throws ParserException {
         StringBuilder sb = new StringBuilder();
         for (Token t : tokens) {
-            sb.append(t.render(c));
+            sb.append(t.render(c, partials));
         }
         return sb.toString();
     }
@@ -68,7 +70,8 @@ public class Token {
         return sb.toString();
     }
 
-    public String render(Context c) {
+    public String render(Context c, Map<Keyword, String> partials)
+            throws ParserException {
         switch (type) {
         case TEXT:
             return value.toString();
@@ -95,26 +98,31 @@ public class Token {
                     for (Object o : list) {
                         Context nested = new Context(o, c);
                         for (Token t : tokens) {
-                            sb.append(t.render(nested));
+                            sb.append(t.render(nested, partials));
                         }
                     }
                     return sb.toString();
                 } else if (!isFalse(n)) {
-                    return renderTokens(tokens, new Context(n, c));
+                    return renderTokens(tokens, new Context(n, c), partials);
                 }
             }
             break;
         case INVERTED:
             if (tokens != null && tokens.size() > 0) {
                 if (isFalse(c.lookup(value))) {
-                    return renderTokens(tokens, c);
+                    return renderTokens(tokens, c, partials);
                 }
             }
             break;
         case PARTIAL:
-            // TODO
+            if (partials != null) {
+                String template = partials.get(value);
+                if (template != null) {
+                    return Mustache.preprocess(template).render(c, partials);
+                }
+            }
         }
-        return "";
+        return ""; // empty
     }
 
     public String toString() {

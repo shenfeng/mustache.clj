@@ -38,7 +38,7 @@ public class MustacheTest {
     @Test
     public void testParser2() throws IOException, ParserException {
         String file = getContent("test/test.tpl");
-        Mustache m = new Mustache(file);
+        Mustache m = Mustache.preprocess(file);
         printTokens(m.tokens, "");
 
     }
@@ -46,13 +46,13 @@ public class MustacheTest {
     @Test
     public void testParser3() throws IOException, ParserException {
         String file = getContent("test/landing.tpl");
-        Mustache m = new Mustache(file);
+        Mustache m = Mustache.preprocess(file);
         printTokens(m.tokens, "");
     }
 
     @Test
     public void testParse() throws ParserException {
-        Mustache m = new Mustache(template);
+        Mustache m = Mustache.preprocess(template);
         printTokens(m.tokens, "");
         List arr = new ArrayList();
         for (int i = 0; i < 10; i++) {
@@ -63,8 +63,9 @@ public class MustacheTest {
         Map data = new HashMap();
         data.put("arr", arr);
         // cell.put("arr", value)
+        Context c = new Context(data, null);
         for (int i = 0; i < 1000000; ++i) {
-            String html = m.render(data);
+            String html = m.render(c);
         }
         // System.out.println(html);
     }

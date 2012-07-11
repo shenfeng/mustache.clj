@@ -3,4 +3,5 @@
   {{#arr}}
     <li><p>{{ name }}</p></li>
   {{/arr}}
+  {{> partial }}
 </ul>

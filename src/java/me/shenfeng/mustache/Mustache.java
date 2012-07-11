@@ -2,8 +2,12 @@ package me.shenfeng.mustache;
 
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import clojure.lang.Keyword;
 
 public class Mustache {
 
@@ -11,6 +15,9 @@ public class Mustache {
     public static final String END = "}}";
 
     List<Token> tokens;
+
+    //
+    public static final HashMap<String, Mustache> CACHE = new HashMap<String, Mustache>();
 
     private List<Token> nestedToken(List<Token> input) throws ParserException {
         List<Token> output = new ArrayList<Token>();
@@ -56,7 +63,16 @@ public class Mustache {
         return output;
     }
 
-    public Mustache(String template) throws ParserException {
+    public static Mustache preprocess(String template) throws ParserException {
+        Mustache m = CACHE.get(template);
+        if (m == null) {
+            m = new Mustache(template);
+            CACHE.put(template, m);
+        }
+        return m;
+    }
+
+    private Mustache(String template) throws ParserException {
         List<Token> tokens = new LinkedList<Token>();
         Scanner scanner = new Scanner(template);
         while (!scanner.eos()) {
@@ -79,8 +95,16 @@ public class Mustache {
         this.tokens = nestedToken(tokens);
     }
 
-    public String render(Object data) {
-        Context ctx = new Context(data, null);
-        return Token.renderTokens(tokens, ctx);
+    public String render(Context ctx) {
+        try {
+            return Token.renderTokens(tokens, ctx, null);
+        } catch (ParserException e) {
+            return ""; // can not happen
+        }
+    }
+
+    public String render(Context ctx, Map<Keyword, String> partials)
+            throws ParserException {
+        return Token.renderTokens(tokens, ctx, partials);
     }
 }
