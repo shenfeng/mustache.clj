@@ -4,23 +4,24 @@
         clojure.test))
 
 (deftemplate template (slurp "test/sample.tpl"))
-(println (to-html template {:arr [{:name "name1"}
-                                  {:name "name2"}]}))
 
+(def data {:variable "Value with <unsafe> data"
+           :arr [{:name "name1"}, {:name "name2"}]
+           :item_list (map (fn [id]
+                             {:id id
+                              :name (str "abc " id)}) (range 1 20))})
 
-(defn- mk-link [i] {:favicon "http://dev-img1.mei.fm/crop?d=moc.bhhdb.www"
-                    :id (+ 51685 i)
-                    :title "http://www.bdhhb.com/Order.asp?types=2&Code=19"
-                    :url "http://www.bdhhb.com/Order.asp?types=2&Code=19"})
+(def partials {:partial (slurp "test/tpl.tpl")})
 
-(def data {:pager {:next_page 2
-                   :page 1
-                   :prev_page false
-                   :total_page 7}
-           :links (map mk-link (range 1 10))})
+(println (to-html template data partials))
 
-(deftemplate test-tpl (slurp "test/test.tpl"))
-(time (dotimes [i 100000] (to-html test-tpl data)))
+(dotimes [i 5]
+  (time (dotimes [i 10000]
+          (to-html template data partials))))
 
-(def tmplate (slurp "test/test.tpl"))
-(time (dotimes [i 1000] (render tmplate data)))
+(time (dotimes [i 100000]
+        (to-html template data partials)))
+
+(time
+ (dotimes [i 100000]
+   (to-html template data partials)))
