@@ -51,7 +51,6 @@ It export 2 functions `deftemplate` and `to-html`
 
 ## Limitation
 
- * Partials is not implemented now.
  * Set Delimiter is not implemented now. Anyway, why change {{}} to <% %>
 
 ## License
