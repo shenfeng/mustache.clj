@@ -3,25 +3,56 @@
         clostache.parser
         clojure.test))
 
-(deftemplate template (slurp "test/sample.tpl"))
+(deftest test-variable
+  (let [t (mk-template "{{name}}")
+        name "abcdefg"]
+    (is (= name (to-html t {:name name}))))
+  (let [e (mk-template "{{name}}")
+        name "<b>"]
+    (is (= "&lt;b&gt;" (to-html e {:name name}))))
+  (let [e (mk-template "{{&name}}")
+        name "<b>"]
+    (is (= "<b>" (to-html e {:name name}))))
+  (let [e (mk-template "{{{name}}}")
+        name "<b>"]
+    (is (= "<b>" (to-html e {:name name})))))
 
-(def data {:variable "Value with <unsafe> data"
-           :arr [{:name "name1"}, {:name "name2"}]
-           :item_list (map (fn [id]
-                             {:id id
-                              :name (str "abc " id)}) (range 1 20))})
+(deftest test-section
+  (let [t (mk-template "{{#t}}true{{/t}}")]
+    (is (= "true" (to-html t {:t true}))))
+  (let [t (mk-template "{{#f}}false{{/f}}")]
+    (is (= "" (to-html t {:t false})))))
 
-(def partials {:partial (slurp "test/tpl.tpl")})
+(deftest test-array
+  (let [t (mk-template "{{#arr}}{{.}}{{/arr}}")]
+    (is (= "1234" (to-html t {:arr (range 1 5)})))))
 
-(println (to-html template data partials))
+(deftest test-comments
+  (let [t (mk-template "{{!comment}}")]
+    (is (= "" (to-html t {:data true})))))
 
-(dotimes [i 5]
-  (time (dotimes [i 10000]
-          (to-html template data partials))))
+(deftest test-partial
+  (let [t (mk-template "Hello {{>partial}}!")]
+    (is (= "Hello World"
+           (to-html t {:name "World"} {:partial "{{name}}"})))))
 
-(time (dotimes [i 100000]
-        (to-html template data partials)))
+(deftemplate template (slurp "test/tpl.tpl"))
 
+(def data {:title "mustache.clj - Logic-less {{mustache}} templates for Clojure"
+           :list (map (fn [id]
+                        {:id id
+                         :name (str "name" id)}) (range 1 4))})
+
+(dotimes [i 100000]
+  (to-html template data))
+
+(println "Perf test: Render 10k Times\n"
+         (slurp "test/tpl.tpl")
+         "With data\n " data
+         "Take: \n")
 (time
  (dotimes [i 100000]
-   (to-html template data partials)))
+   (to-html template data)))
+
+(println "\nResult: \n"
+         (to-html template data))

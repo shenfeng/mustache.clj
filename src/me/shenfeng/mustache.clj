@@ -2,6 +2,9 @@
   (:import me.shenfeng.mustache.Mustache
            me.shenfeng.mustache.Context))
 
+(defn mk-template [template]
+  (Mustache/preprocess template))
+
 (defmacro deftemplate [name template]
   `(def ~name (Mustache/preprocess ~template)))
 

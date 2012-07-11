@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{ variable }}</title>
+    <title>{{ title }}</title>
   </head>
   <body>
-    {{#item_list}}
-      <li>
-        id: {{id}}, name: {{name}}
-      </li>{{/item_list}}
+    <ul>
+      {{#list}}<li>id: {{id}}, name: {{name}}</li>
+      {{/list}}
+    </ul>
   </body>
 </html>
