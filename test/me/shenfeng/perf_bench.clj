@@ -36,7 +36,7 @@
 (defn bench [&{:keys [loops] :or {loops 100000}}]
   (println "warn up jvm")
   (dotimes [i loops]
-    (to-html template data)
+    (template data)
     (render-file "hithere" data))
 
   (println "bench stencil")
@@ -48,7 +48,7 @@
   (println "bench mustache.clj")
   (time (dotimes [i loops]
           ;; bench mustache.clj
-          (to-html template data))))
+          (template data))))
 
 ;;; use `lein test` to run it
 (deftest testtest
