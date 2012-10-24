@@ -1,4 +1,4 @@
-(defproject me.shenfeng/mustache "0.0.4"
+(defproject me.shenfeng/mustache "0.0.5"
   :description "Mustache write in java, for clojure"
   :dependencies [[clojure "1.4.0"]]
   :warn-on-reflection true

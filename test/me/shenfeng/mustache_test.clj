@@ -43,8 +43,8 @@
                         {:id id
                          :name (str "name" id)}) (range 1 4))})
 
-(dotimes [i 100000]
-  (to-html template data))
+(dotimes [i 100000]                     ; warm up
+  (template data))
 
 (println "Perf test: Render 10k Times\n"
          (slurp "test/tpl.tpl")
@@ -52,7 +52,10 @@
          "Take: \n")
 (time
  (dotimes [i 100000]
-   (to-html template data)))
+   template data))
 
-(println "\nResult: \n"
-         (to-html template data))
+;; (println "\nResult: \n"
+;;          (to-html template data))
+
+
+;; (deftemplate hello-world "{{name}}")

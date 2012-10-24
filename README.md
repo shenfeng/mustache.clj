@@ -9,15 +9,15 @@ By preprocessing template into a tree like data structure, It's quite fast.
 ## Usage
 
 ```clj
-[me.shenfeng/mustache "0.0.4"]
+[me.shenfeng/mustache "0.0.5"]
 ```
-mustache.clj export 2 functions `deftemplate` and `to-html`:
+mustache.clj export a functions `deftemplate`:
 
 ```clj
 
 (deftemplate template "{{template}}")
 
-(to-html template {:you-data "data"})
+(template {:you-data "data"})
 
 ```
 
@@ -46,7 +46,7 @@ mustache.clj export 2 functions `deftemplate` and `to-html`:
                   {:tag "Mustache"}
                   {:tag "Performance"}]})
 
-(println (to-html template data))
+(println (template data))
 ```
 
 ### Output
