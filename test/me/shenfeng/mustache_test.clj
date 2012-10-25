@@ -46,6 +46,13 @@
 (dotimes [i 100000]                     ; warm up
   (template data))
 
+(deftemplates {:name_one "{{name}}"
+               :name_two "Hello {{name}}, {{>name_one}}"})
+
+(deftest test-deftemplates
+  (is (= (name-one {:name "abc"}) "abc"))
+  (is (= (name-two {:name "abc"}) "Hello abc, abc")))
+
 (println "Perf test: Render 10k Times\n"
          (slurp "test/tpl.tpl")
          "With data\n " data
