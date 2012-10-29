@@ -9,7 +9,7 @@ By preprocessing template into a tree like data structure, It's quite fast.
 ## Usage
 
 ```clj
-[me.shenfeng/mustache "0.0.5"]
+[me.shenfeng/mustache "0.0.7"]
 ```
 mustache.clj export a functions `deftemplate`:
 

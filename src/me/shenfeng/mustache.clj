@@ -1,7 +1,6 @@
 (ns me.shenfeng.mustache
   (:require [clojure.string :as str])
-  (:import me.shenfeng.mustache.Mustache
-           me.shenfeng.mustache.Context))
+  (:import [me.shenfeng.mustache ResourceList Mustache Context]))
 
 (defn mk-template [template]
   (Mustache/preprocess template))
@@ -32,3 +31,5 @@
 
 (defn deftemplates [tmpls]
   (dorun (map #(gen-var %1 tmpls) tmpls)))
+
+(defn resources [pattern] (ResourceList/getResources pattern))
