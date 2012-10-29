@@ -62,7 +62,7 @@
          "Take: \n")
 (time
  (dotimes [i 100000]
-   template data))
+   (template data)))
 
 ;; (println "\nResult: \n"
 ;;          (to-html template data))
