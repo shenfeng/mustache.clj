@@ -5,8 +5,7 @@
   </head>
   <body>
     <ul>
-      {{#list}}<li>id: {{id}}, name: {{name}}</li>
-      {{/list}}
+      {{#list}}<li>id: {{id}}, name: {{name}}</li>{{/list}}
     </ul>
   </body>
 </html>

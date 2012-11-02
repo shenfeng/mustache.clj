@@ -6,14 +6,18 @@ import java.util.Map;
 import clojure.lang.Keyword;
 
 public class Context {
-    private Object data;
-    private Context parent;
+    private final Object data;
+    private final Context parent;
 
     private static Keyword ME = Keyword.intern(".");
 
     public Context(Object data, Context parent) {
         this.data = data;
         this.parent = parent;
+    }
+    
+    public Context(Object data) {
+       this(data, null);
     }
 
     @SuppressWarnings("rawtypes")

@@ -56,10 +56,11 @@
 (deftest test-resouces
   (is (seq (resources #".*shenfeng.*"))))
 
-(println "Perf test: Render 10k Times\n"
+(println "Perf test: Render 100k Times\n"
          (slurp "test/tpl.tpl")
          "With data\n " data
-         "Take: \n")
+         "Take: \n"
+         "Output: " (template data))
 (time
  (dotimes [i 100000]
    (template data)))
