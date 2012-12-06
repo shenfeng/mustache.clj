@@ -9,7 +9,7 @@ By preprocessing template into a tree like data structure, It's quite fast.
 ## Usage
 
 ```clj
-[me.shenfeng/mustache "0.0.7"]
+[me.shenfeng/mustache "0.0.8"]
 ```
 mustache.clj export a functions `deftemplate`:
 
@@ -20,6 +20,18 @@ mustache.clj export a functions `deftemplate`:
 (template {:you-data "data"})
 
 ```
+
+There is also a `templates`, combined with `resources`, is handy.
+More info, please refer the code, and [usage of Rssminer](https://github.com/shenfeng/rssminer/blob/master/src/rssminer/tmpls.clj)
+
+
+### Motivation
+
+I write it for the need of [Rssminer](http://rssminer.net)
+
+* Rssminer need to fast with limited MEM and CPU
+* It make the [i18n quite easy](https://github.com/shenfeng/rssminer/blob/master/src/rssminer/i18n.clj)
+* Mustache is used both server side and client side
 
 ### Template
 
