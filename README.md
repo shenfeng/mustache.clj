@@ -21,7 +21,7 @@ mustache.clj export a functions `deftemplate`:
 
 ```
 
-There is also a `templates`, combined with `resources`, is handy.
+There is also a `deftemplates`, combined with `resources`, is handy.
 More info, please refer the code, and [usage of Rssminer](https://github.com/shenfeng/rssminer/blob/master/src/rssminer/tmpls.clj)
 
 
