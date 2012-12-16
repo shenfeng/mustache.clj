@@ -1,5 +1,5 @@
 #! /bin/bash
 
-rm -rf target/classes && mkdir -p target/classes
+rm -rf target && mkdir -p target/classes
 CP=`lein classpath`
 find src/java -name "*.java" | xargs javac -Xlint:unchecked -encoding utf8 -cp $CP -d target/classes -sourcepath src/java/

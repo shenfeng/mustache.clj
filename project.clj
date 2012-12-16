@@ -3,6 +3,7 @@
   :dependencies [[org.clojure/clojure "1.4.0"]]
   :warn-on-reflection true
   :java-source-path "src/java"
+  :jar-exclusions [#".*java$"]
   :javac-options {:source "1.6" :target "1.6" :debug "true" :fork "true"}
   :plugins [[lein-swank "1.4.4"]]
   :profiles {:dev {:dependencies [[junit/junit "4.8.2"]
