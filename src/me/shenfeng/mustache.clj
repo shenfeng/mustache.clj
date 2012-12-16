@@ -51,6 +51,8 @@
                       {} files)]
     (deftemplates tmpls tran)))
 
+;;; clear? to prent OOM when development => clears partials cache
+;;; tempalte get constantly modified and reloaded
 (defn mktmpls-from-folder [folder extentions & [tran clear?]]
   (when clear? (.clear Mustache/CACHE))
   (let [^File dir (if (instance? File folder) folder (File. ^String folder))]

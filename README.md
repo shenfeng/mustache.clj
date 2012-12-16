@@ -6,34 +6,22 @@ template system for Clojure.
 
 By preprocessing template into a tree like data structure, It's quite fast.
 
-## Usage
-
-```clj
-[me.shenfeng/mustache "0.0.8"]
-```
-mustache.clj export a functions `deftemplate`:
-
-```clj
-
-(deftemplate template "{{template}}")
-
-(template {:you-data "data"})
-
-```
-
-There is also a `deftemplates`, combined with `resources`, is handy.
-More info, please refer the code, and [usage of Rssminer](https://github.com/shenfeng/rssminer/blob/master/src/rssminer/tmpls.clj)
-
-
 ### Motivation
 
-I write it for the need of [Rssminer](http://rssminer.net)
+I initally write it for my part time project: [Rssminer](http://rssminer.net)
 
 * Rssminer need to fast with limited MEM and CPU
-* It make the [i18n quite easy](https://github.com/shenfeng/rssminer/blob/master/src/rssminer/i18n.clj)
+* It makes the [i18n quite easy](https://github.com/shenfeng/rssminer/blob/master/src/rssminer/i18n.clj)
 * Mustache is used both server side and client side
 
-### Template
+## Usage
+
+### Quick start
+
+```clj
+[me.shenfeng/mustache "1.0-SNAPSHOT"]
+```
+#### Template
 
 ```html
 <!-- test/sample.tpl -->
@@ -47,10 +35,10 @@ I write it for the need of [Rssminer](http://rssminer.net)
   {{/ hidden }}
 </ul>
 ```
-### Code
+#### Code
 
 ```clj
-(deftemplate template (slurp "test/sample.tpl"))
+(deftemplate tmpl-fn (slurp "test/sample.tpl"))
 
 (def data {:title "mustache.clj"
            :desc "Logic-less {{mustache}} templates for Clojure"
@@ -58,10 +46,10 @@ I write it for the need of [Rssminer](http://rssminer.net)
                   {:tag "Mustache"}
                   {:tag "Performance"}]})
 
-(println (template data))
+(println (tmpl-fn data))
 ```
 
-### Output
+#### Output
 
 ```html
 <h1>mustache.clj</h1>
@@ -72,6 +60,54 @@ I write it for the need of [Rssminer](http://rssminer.net)
     <li class="tag">Performance</li>
 </ul>
 ```
+
+
+### Generate functions from templates folder
+
+templates folder:
+
+```sh
+templates
+├── admin.tpl                => admin
+├── login.tpl                => login
+├── m
+│   ├── landing.tpl          => m-landing
+│   ├── p_header.tpl         => m-p-header
+│   └── subs.tpl             => m-subs
+└── tmpls
+    ├── app
+    │   ├── feed_content.tpl => tmpls-app-feed-content
+```
+
+```clj
+(mktmpls-from-folder "templates" [".tpl"]) ;  generates the clojure fn
+
+; now you can write something like this
+(admin {:key "str" :array [1 2 3 5]})
+```
+
+### Generate functions from classpath resources
+
+`mktmpls-from-resouces` just like mktmpls-from-folder, except find templates files from classpath
+
+### Transform template data before apply it to the template
+
+You can pass a function (optional) to `deftemplate`, `mktmpls-from-folder`, `mktmpls-from-resouces`, allows you to transform the template data
+
+```clj
+(defn add-gloal-data [data]
+  (assoc data
+    :dev? (config/dev?)                 ; distingish dev and prod
+    :server-host (get-in *current-req* [:header "host"]) ; stg1, test, prod host is different
+    ;; other data, like different data based on local => for i18n
+    ))
+
+(mktmpls-from-folder "templates" [".tpl"] add-gloal-data)
+```
+
+## Performance
+
+It runs quit fast. It can render the `test/sample.tpl` with the above data about **500k times per seconds** on my 13 inch Macbook Air.
 
 ## Limitation
 
