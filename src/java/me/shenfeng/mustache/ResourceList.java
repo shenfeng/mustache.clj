@@ -5,63 +5,67 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 /**
  * list resources available from the classpath
  */
 public class ResourceList {
-    public static List<String> getResources(Pattern pattern)
+    public static List<String> getResources(String folder, List<String> extensions)
             throws IOException {
-        List<String> retval = new ArrayList<String>();
-        String[] paths = System.getProperty("java.class.path", ".")
-                .split(":");
+        List<String> files = new ArrayList<String>(32);
+        String[] paths = System.getProperty("java.class.path", ".").split(":");
         for (String path : paths) {
             File file = new File(path);
             if (file.isDirectory()) {
-                retval.addAll(getResourcesFromDirectory(file, pattern));
+                files.addAll(getFromDir(file, folder, extensions));
             } else if (file.exists()) {
-                retval.addAll(getResourcesFromJarFile(file, pattern));
+                files.addAll(getFromJar(file, folder, extensions));
             }
         }
-        return retval;
+        return files;
     }
 
-    static List<String> getResourcesFromJarFile(File file, Pattern pattern)
-            throws ZipException, IOException {
-        ArrayList<String> retval = new ArrayList<String>();
+    private static boolean accpet(String path, String folder, List<String> extensions)
+            throws IOException {
+        boolean b = false;
+        for (String e : extensions) {
+            if (path.endsWith(e)) {
+                b = true;
+                break;
+            }
+        }
+        return b && path.contains(folder);
+    }
+
+    public static List<String> getFromJar(File file, String folder, List<String> extensions)
+            throws IOException {
+        ArrayList<String> files = new ArrayList<String>();
         ZipFile zf = new ZipFile(file);
         Enumeration<?> e = zf.entries();
         while (e.hasMoreElements()) {
-            ZipEntry ze = (ZipEntry) e.nextElement();
-            String fileName = ze.getName();
-            boolean accept = pattern.matcher(fileName).matches();
-            if (accept) {
-                retval.add(fileName);
+            String fileName = ((ZipEntry) e.nextElement()).getName();
+            if (accpet(fileName, folder, extensions)) {
+                files.add(fileName);
             }
         }
         zf.close();
-        return retval;
+        return files;
     }
 
-    static List<String> getResourcesFromDirectory(File directory,
-            Pattern pattern) throws IOException {
-        ArrayList<String> retval = new ArrayList<String>();
-        File[] fileList = directory.listFiles();
-        for (File file : fileList) {
-            if (file.isDirectory()) {
-                retval.addAll(getResourcesFromDirectory(file, pattern));
+    public static List<String> getFromDir(File dir, String folder, List<String> extensions)
+            throws IOException {
+        List<String> files = new ArrayList<String>(16);
+        for (File f : dir.listFiles()) {
+            if (f.isDirectory()) {
+                files.addAll(getFromDir(f, folder, extensions));
             } else {
-                String fileName = file.getCanonicalPath();
-                boolean accept = pattern.matcher(fileName).matches();
-                if (accept) {
-                    retval.add(fileName);
-                }
+                String path = f.getAbsolutePath();
+                if (accpet(path, folder, extensions))
+                    files.add(path);
             }
         }
-        return retval;
+        return files;
     }
 }

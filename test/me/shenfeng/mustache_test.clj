@@ -53,9 +53,6 @@
   (is (= (name-one {:name "abc"}) "abc"))
   (is (= (name-two {:name "abc"}) "Hello abc, abc")))
 
-(deftest test-resouces
-  (is (seq (resources #".*shenfeng.*"))))
-
 (println "Perf test: Render 100k Times\n"
          (slurp "test/tpl.tpl")
          "With data\n " data
