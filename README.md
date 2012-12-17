@@ -61,7 +61,6 @@ I initally write it for my part time project: [Rssminer](http://rssminer.net)
 </ul>
 ```
 
-
 ### Generate functions from templates folder
 
 templates folder:
@@ -80,7 +79,7 @@ templates
 ```
 
 ```clj
-(mktmpls-from-folder "templates" [".tpl"]) ;  generates the clojure fn
+(gen-tmpls-from-folder "templates" [".tpl"]) ;  generates the clojure fn
 
 ; now you can write something like this
 (admin {:key "str" :array [1 2 3 5]})
@@ -88,7 +87,7 @@ templates
 
 ### Generate functions from classpath resources
 
-`mktmpls-from-resouces` just like mktmpls-from-folder, except find templates files from classpath
+`gen-tmpls-from-resources` just like mktmpls-from-folder, except find templates files from classpath
 
 ### Transform template data before apply it to the template
 
@@ -102,7 +101,7 @@ You can pass a function (optional) to `deftemplate`, `mktmpls-from-folder`, `mkt
     ;; other data, like different data based on local => for i18n
     ))
 
-(mktmpls-from-folder "templates" [".tpl"] add-gloal-data)
+(gen-tmpls-from-folder "templates" [".tpl"] add-gloal-data)
 ```
 
 ## Performance

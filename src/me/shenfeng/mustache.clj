@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.java.io :as io])
   (:import [me.shenfeng.mustache ResourceList Mustache Context]
+           clojure.lang.Keyword
            java.io.File))
 
 (defn mk-template [template]
@@ -20,13 +21,9 @@
 (defmacro deftemplate [name template & [partials tran]]
   `(let [tmpl# (Mustache/preprocess ~template)
          f# (or ~tran identity)]
-     (defn ~name
-       ([]
-          (.render tmpl# (Context. (f# {})) ~partials))
-       ([data#]
-          (.render tmpl# (Context. (f# data#)) ~partials))
-       ([data# partial#]
-          (.render tmpl# (Context. (f# data#)) (or partial# ~partials))))))
+     (defn ~name [& [data# partials#]]
+       (let [cxt# (Context. (f# (or data# {})))]
+         (.render tmpl# cxt# (or partials# ~partials))))))
 
 (defn- get-content [file]
   (slurp (or (io/resource file)
@@ -39,32 +36,41 @@
     (keyword (.substring remain 0
                          (.lastIndexOf remain (int \.))))))
 
-(defn deftemplates [tmpls & [tran]]
-  (doseq [[^clojure.lang.Keyword name template] tmpls]
-    (let [name (str/replace (str (.sym name)) #"_|/" "-")]
-      (eval `(deftemplate ~(symbol name) ~template ~tmpls ~tran)))))
+(defn- get-tmpls [files folder]
+  (reduce (fn [m f]
+            (assoc m
+              (get-name f folder) (get-content f)))
+          {} files))
 
-(defn- gen-vars [folder files tran]
-  (let [tmpls (reduce (fn [m f]
-                        (assoc m
-                          (get-name f folder) (get-content f)))
-                      {} files)]
-    (deftemplates tmpls tran)))
-
-;;; clear? to prent OOM when development => clears partials cache
-;;; tempalte get constantly modified and reloaded
-(defn mktmpls-from-folder [folder extentions & [tran clear?]]
-  (when clear? (.clear Mustache/CACHE))
+(defn- tmpls-from-rerouces [folder extentions]
   (let [^File dir (if (instance? File folder) folder (File. ^String folder))]
-    (gen-vars (.getName dir)
-              (map str (filter
-                        (fn [^File f]
-                          (and (.isFile f)
-                               (some (fn [e]
-                                       (.endsWith (.getName f) e)) extentions)))
-                        (file-seq dir)))
-              tran)))
+    (get-tmpls (map str
+                    (filter
+                     (fn [^File f]
+                       (and (.isFile f)
+                            (some (fn [e]
+                                    (.endsWith (.getName f) e)) extentions)))
+                     (file-seq dir)))
+               (.getName dir))))
 
-(defn mktmpls-from-resouces [folder extentions & [tran clear?]]
-  (when clear? (.clear Mustache/CACHE))
-  (gen-vars folder (ResourceList/getResources folder extentions) tran))
+(defn- tmpls-from-folder [folder extentions]
+  (get-tmpls (ResourceList/getResources folder extentions) folder))
+
+(defn- fn-name [name]         ; app/search_result => app-search-result
+  (symbol (str/replace (str (.sym ^Keyword name)) #"_|/" "-")))
+
+(defmacro gen-tmpls-from-folder [folder extentions & [tran]]
+  (.clear Mustache/CACHE)               ; clear paritials cache
+  (let [tmpls (tmpls-from-folder folder extentions)
+        defs (map (fn [[name template]]
+                    `(deftemplate ~(fn-name name) ~template ~tmpls ~tran))
+                  tmpls)]
+    `(do ~@defs)))
+
+(defmacro gen-tmpls-from-resources [folder extentions & [tran]]
+  (.clear Mustache/CACHE)               ; clear paritials cache
+  (let [tmpls ^:const (tmpls-from-rerouces folder extentions)
+        defs (map (fn [[name template]]
+                    `(deftemplate ~(fn-name name) ~template ~tmpls ~tran))
+                  tmpls)]
+    `(do ~@defs)))

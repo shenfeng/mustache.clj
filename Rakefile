@@ -6,7 +6,7 @@ end
 desc "Install in local repository"
 task :install_local => :test do
   sh 'lein install'
-  sh 'cd ~/workspace/rssminer && lein deps'
+  # sh 'cd ~/workspace/rssminer && lein deps'
 end
 
 desc "Install in clojars repository"
