@@ -21,9 +21,9 @@
 (defmacro deftemplate [name template & [partials tran]]
   `(let [tmpl# (Mustache/preprocess ~template)
          f# (or ~tran identity)]
-     (defn ~name [& [data# partials#]]
-       (let [cxt# (Context. (f# (or data# {})))]
-         (.render tmpl# cxt# (or partials# ~partials))))))
+     (defn ~name [& [~'data ~'partials]] ; better names for tools
+       (let [cxt# (Context. (f# (or ~'data {})))]
+         (.render tmpl# cxt# (or ~'partials ~partials))))))
 
 (defn- get-content [file]
   (slurp (or (io/resource file)
@@ -69,7 +69,7 @@
 
 (defmacro gen-tmpls-from-resources [folder extentions & [tran]]
   (.clear Mustache/CACHE)               ; clear paritials cache
-  (let [tmpls ^:const (tmpls-from-rerouces folder extentions)
+  (let [tmpls (tmpls-from-rerouces folder extentions)
         defs (map (fn [[name template]]
                     `(deftemplate ~(fn-name name) ~template ~tmpls ~tran))
                   tmpls)]
