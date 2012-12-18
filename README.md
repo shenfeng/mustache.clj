@@ -19,7 +19,7 @@ I initally write it for my part time project: [Rssminer](http://rssminer.net)
 ### Quick start
 
 ```clj
-[me.shenfeng/mustache "1.0-SNAPSHOT"]
+[me.shenfeng/mustache "1.1-SNAPSHOT"]
 ```
 #### Template
 
@@ -87,7 +87,7 @@ templates
 
 ### Generate functions from classpath resources
 
-`gen-tmpls-from-resources` just like mktmpls-from-folder, except find templates files from classpath
+`gen-tmpls-from-resources` just like gen-tmpls-from-folder, except find templates files from classpath
 
 ### Transform template data before apply it to the template
 
@@ -97,7 +97,7 @@ You can pass a function (optional) to `deftemplate`, `mktmpls-from-folder`, `mkt
 (defn add-gloal-data [data]
   (assoc data
     :dev? (config/dev?)                 ; distingish dev and prod
-    :server-host (get-in *current-req* [:header "host"]) ; stg1, test, prod host is different
+    :server-host (get-in *current-req* [:header "host"]) ; stg1, test, prod host are different
     ;; other data, like different data based on local => for i18n
     ))
 
