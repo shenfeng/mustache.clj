@@ -36,6 +36,8 @@ public class Context {
             return true;
         } else if ((v instanceof List) && ((List) v).isEmpty()) {
             return true;
+        } else if((v instanceof String) && ((String)v).isEmpty()) {
+            return true;
         }
         return false;
     }
