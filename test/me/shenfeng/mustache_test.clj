@@ -40,6 +40,18 @@
     (is (= "Hello World"
            (to-html t {:name "World"} {:partial "{{name}}"})))))
 
+(deftest test-gen-tmpls-from-resouces
+  (gen-tmpls-from-resources "test" [".tpl"])
+  (is (test2 {}))                       ; test2 is generate
+  (is (test2))
+  (is (test2)))
+
+(deftest test-gen-tmpls-from-folder
+  (gen-tmpls-from-folder "mustache.clj" [".tpl"])
+  (is (test-test2 {})) ;; => test2.clj => test-test2
+  (is (test-test2))
+  (is (test-test2)))
+
 (deftemplate template (slurp "test/tpl.tpl"))
 
 (def data {:title "mustache.clj - Logic-less {{mustache}} templates for Clojure"
