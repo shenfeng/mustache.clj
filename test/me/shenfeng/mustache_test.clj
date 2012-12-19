@@ -31,6 +31,10 @@
   (let [t (mk-template "{{!comment}}")]
     (is (= "" (to-html t {:data true})))))
 
+(deftest test-empty-string-is-false
+  (let [t (mk-template "{{#str}}abc{{/str}}")]
+    (is (= "" (to-html t {:str ""})))))
+
 (deftest test-partial
   (let [t (mk-template "Hello {{>partial}}!")]
     (is (= "Hello World"
