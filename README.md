@@ -6,13 +6,19 @@ template system for Clojure.
 
 By preprocessing template into a tree like data structure, It's quite fast.
 
-### Motivation
+## Motivation
 
 I initally write it for my part time project: [Rssminer](http://rssminer.net)
 
 * Rssminer need to fast with limited MEM and CPU
 * It makes the [i18n quite easy](https://github.com/shenfeng/rssminer/blob/master/src/rssminer/i18n.clj)
 * Mustache is used both server side and client side
+
+## Features
+* Clean compact code: the jar size is about 11k
+* Zero dependency
+* Fast: renders the `test/sample.tpl` with the test data about **500k times per seconds** on 13 inch Macbook Air
+* For Clojure
 
 ## Usage
 
@@ -103,10 +109,6 @@ You can pass a function (optional) to `deftemplate`, `mktmpls-from-folder`, `mkt
 
 (gen-tmpls-from-folder "templates" [".tpl"] add-gloal-data)
 ```
-
-## Performance
-
-It runs quit fast. It can render the `test/sample.tpl` with the above data about **500k times per seconds** on my 13 inch Macbook Air.
 
 ## Limitation
 
