@@ -23,6 +23,10 @@
   (let [t (mk-template "{{#f}}false{{/f}}")]
     (is (= "" (to-html t {:t false})))))
 
+(deftest test-true-test
+  (let [t (mk-template "{{?t}}true{{/t}}{{^t}}false{{/t}}")]
+    (is (= "true" (to-html t {:t [1 2 3]})))))
+
 (deftest test-array
   (let [t (mk-template "{{#arr}}{{.}}{{/arr}}")]
     (is (= "1234" (to-html t {:arr (range 1 5)})))))

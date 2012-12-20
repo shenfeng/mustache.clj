@@ -1,7 +1,7 @@
 package me.shenfeng.mustache;
 
 public class Scanner {
-    public static final String TAGS = "#^>!/{&";
+    public static final String TAGS = "#^>!/{&?";
 
     String template;
     int idx;
@@ -51,6 +51,9 @@ public class Scanner {
             char c = next();
             if (TAGS.indexOf(c) != -1) {
                 idx += 1;
+                if (c == Token.TRUE) {
+                    System.err.println("WARN: use nonstandard ?");
+                }
                 return c;
             } else {
                 return Token.NAME;

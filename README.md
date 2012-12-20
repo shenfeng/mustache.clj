@@ -111,6 +111,28 @@ It runs quit fast. It can render the `test/sample.tpl` with the above data about
 ## Limitation
 
  * Set Delimiter is not implemented now. Anyway, why change {{}} to <% %>
+ * Lambdas is not implemented
+
+## Non Standard ?
+
+  use `?` to test value true. example
+
+```html
+{{?links}}
+links is value true, this string get outputed
+{{/links}}
+
+{{^links}}
+links is value false, this string get outputed
+{{/links}}
+
+{{#links}}
+this is replated (count links) times
+{{/links}}
+
+When using ?, Mustache.clj will print a warnning to stderr
+
+```
 
 ## License
 
