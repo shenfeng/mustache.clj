@@ -127,7 +127,7 @@ links is value false, this string get outputed
 {{/links}}
 
 {{#links}}
-this is replated (count links) times
+this is repeated (count links) times
 {{/links}}
 
 When using ?, Mustache.clj will print a warnning to stderr
