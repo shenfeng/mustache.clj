@@ -14,6 +14,7 @@ public class Token {
     public static final char NO_ESCAPE1 = '{';
     public static final char NO_ESCAPE2 = '&';
     public static final char SECTION = '#';
+    public static final char TRUE = '?';
     public static final char INVERTED = '^';
     public static final char PARTIAL = '>';
     final char type;
@@ -33,8 +34,8 @@ public class Token {
         }
     }
 
-    public static String renderTokens(List<Token> tokens, Context c,
-            Map<Keyword, String> partials) throws ParserException {
+    public static String renderTokens(List<Token> tokens, Context c, Map<Keyword, String> partials)
+            throws ParserException {
         StringBuilder sb = new StringBuilder();
         for (Token t : tokens) {
             sb.append(t.render(c, partials));
@@ -70,8 +71,7 @@ public class Token {
         return sb.toString();
     }
 
-    public String render(Context c, Map<Keyword, String> partials)
-            throws ParserException {
+    public String render(Context c, Map<Keyword, String> partials) throws ParserException {
         switch (type) {
         case TEXT:
             return value.toString();
@@ -88,8 +88,13 @@ public class Token {
                 return r.toString();
             }
             break;
+        case TRUE:
+            if (tokens != null && !isFalse(c.lookup(value))) {
+                return renderTokens(tokens, c, partials);
+            }
+            break;
         case SECTION:
-            if (tokens != null && tokens.size() > 0) {
+            if (tokens != null) {
                 Object n = c.lookup(value);
                 if (isArray(n)) {
                     StringBuilder sb = new StringBuilder();
@@ -108,7 +113,7 @@ public class Token {
             }
             break;
         case INVERTED:
-            if (tokens != null && tokens.size() > 0) {
+            if (tokens != null) {
                 if (isFalse(c.lookup(value))) {
                     return renderTokens(tokens, c, partials);
                 }
@@ -126,7 +131,7 @@ public class Token {
     }
 
     public String toString() {
-        if (tokens != null && !tokens.isEmpty()) {
+        if (tokens != null) {
             return type + " " + value + "\t" + tokens;
         } else {
             return type + " " + value;

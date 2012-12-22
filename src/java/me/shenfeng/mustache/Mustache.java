@@ -2,10 +2,11 @@ package me.shenfeng.mustache;
 
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import clojure.lang.Keyword;
 
@@ -16,8 +17,7 @@ public class Mustache {
 
     List<Token> tokens;
 
-    //
-    public static final HashMap<String, Mustache> CACHE = new HashMap<String, Mustache>();
+    public static final ConcurrentMap<String, Mustache> CACHE = new ConcurrentHashMap<String, Mustache>();
 
     private List<Token> nestedToken(List<Token> input) throws ParserException {
         List<Token> output = new ArrayList<Token>();
@@ -28,6 +28,7 @@ public class Mustache {
         for (Token token : input) {
             switch (token.type) {
             case Token.INVERTED:
+            case Token.TRUE:
             case Token.SECTION:
                 token.tokens = new ArrayList<Token>();
                 sections.add(token);
@@ -36,13 +37,12 @@ public class Mustache {
                 break;
             case '/':
                 if (sections.isEmpty()) {
-                    throw new ParserException("Unopened section: "
-                            + token.value);
+                    throw new ParserException("Unopened section: " + token.value);
                 }
                 section = sections.removeLast();
                 if (!section.value.equals(token.value)) {
-                    throw new ParserException("Unclosed section: "
-                            + section.value + ":" + token.value);
+                    throw new ParserException("Unclosed " + token.value + "; in section"
+                            + section.value);
                 }
 
                 if (sections.size() > 0) {
@@ -57,8 +57,7 @@ public class Mustache {
             }
         }
         if (sections.size() > 0) {
-            throw new ParserException("Unclosed section: "
-                    + sections.peek().value);
+            throw new ParserException("Unclosed section: " + sections.peek().value);
         }
         return output;
     }
@@ -103,8 +102,7 @@ public class Mustache {
         }
     }
 
-    public String render(Context ctx, Map<Keyword, String> partials)
-            throws ParserException {
+    public String render(Context ctx, Map<Keyword, String> partials) throws ParserException {
         return Token.renderTokens(tokens, ctx, partials);
     }
 }

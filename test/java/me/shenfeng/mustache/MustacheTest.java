@@ -37,7 +37,7 @@ public class MustacheTest {
 
     @Test
     public void testParser2() throws IOException, ParserException {
-        String file = getContent("test/test.tpl");
+        String file = getContent("test/test2.tpl");
         Mustache m = Mustache.preprocess(file);
         printTokens(m.tokens, "");
 
