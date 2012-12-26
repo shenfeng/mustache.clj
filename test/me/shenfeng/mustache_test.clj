@@ -51,7 +51,7 @@
   (is (test2)))
 
 (deftest test-gen-tmpls-from-folder
-  (gen-tmpls-from-folder "mustache.clj" [".tpl"])
+  (gen-tmpls-from-folder "../mustache.clj" [".tpl"])
   (is (test-test2 {})) ;; => test2.clj => test-test2
   (is (test-test2))
   (is (test-test2)))
