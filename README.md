@@ -25,7 +25,7 @@ I initally write it for my part time project: [Rssminer](http://rssminer.net)
 ### Quick start
 
 ```clj
-[me.shenfeng/mustache "1.1-SNAPSHOT"]
+[me.shenfeng/mustache "1.1"]
 ```
 #### Template
 
