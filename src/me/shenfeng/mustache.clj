@@ -22,7 +22,7 @@
               (get-name f folder) (get-content f)))
           {} files))
 
-(defn- tmpls-from-rerouces [folder extentions]
+(defn- tmpls-from-folder [folder extentions]
   (let [^File dir (if (instance? File folder) folder (File. ^String folder))]
     (get-tmpls (map str
                     (filter
@@ -33,7 +33,7 @@
                      (file-seq dir)))
                (.getName dir))))
 
-(defn- tmpls-from-folder [folder extentions]
+(defn- tmpls-from-rerouces [folder extentions]
   (get-tmpls (ResourceList/getResources folder extentions) folder))
 
 (defn- fn-name [n]         ; app/search_result => app-search-result
