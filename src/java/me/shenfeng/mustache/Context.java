@@ -52,14 +52,13 @@ public class Context {
             Object d = context.data;
             if (d instanceof Map) {
                 @SuppressWarnings("rawtypes")
-                Object val = ((Map) d).get(key);
-                if (val != null) {
-                    return val;
+                Map m = (Map)d;
+                if(m.containsKey(key)) {
+                   return m.get(key);
                 }
             }
             context = context.parent;
         }
-
         return null;
     }
 }
